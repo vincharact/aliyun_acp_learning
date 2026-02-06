@@ -3,7 +3,11 @@ name = "aliyun-acp-learning"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+<<<<<<< HEAD
 requires-python = ">=3.10"
+=======
+requires-python = "==3.11.9"
+>>>>>>> 9643771 (upd,py version)
 dependencies = [
     "agentscope==1.0.6",
     "alibabacloud-bailian20231229==1.8.2",
