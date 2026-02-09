@@ -1,16 +1,15 @@
 import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.ollama_client import OllamaClient
-from app.config import OllamaConfig
+from ollama_client import OllamaClient
+
+from config import OllamaConfig
+from logger import logger
 
 
 def invoke(prompt: str, model: str = "qwen3:8b") -> str:
-    """使用本地 Ollama 调用模型"""
-    config = OllamaConfig(model=model)
+    config = OllamaConfig(non_thinking_model=model)
     client = OllamaClient(
-        model=config.model,
+        model=config.non_thinking_model,
         base_url=config.base_url,
         timeout=config.timeout
     )
@@ -52,7 +51,6 @@ def optimize_with_judge_rules(current_prompt, failed_response, judge_prompt):
 
 
 def run_ai_judge_optimization(initial_prompt, retrieved_text, final_judge_prompt, max_iterations=5):
-    """运行由AI裁判驱动的自动化优化循环"""
     current_generating_prompt = initial_prompt
 
     print("\n" + "=" * 30)

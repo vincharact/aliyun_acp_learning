@@ -1,9 +1,9 @@
 import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.ollama_client import OllamaClient
-from app.config import OllamaConfig
+from ollama_client import OllamaClient
+
+from config import OllamaConfig
+from logger import logger
 
 
 def test_ollama_connection(config: OllamaConfig = None):
@@ -11,8 +11,10 @@ def test_ollama_connection(config: OllamaConfig = None):
         config = OllamaConfig()
     
     try:
+        logger.info("测试Ollama连接...")
+        
         client = OllamaClient(
-            model=config.model,
+            model=config.non_thinking_model,
             base_url=config.base_url,
             timeout=config.timeout
         )
@@ -32,14 +34,22 @@ def test_ollama_connection(config: OllamaConfig = None):
         response = client.chat(messages)
         print(f"回复: {response['message']['content']}")
         
+        logger.info("Ollama连接测试成功！")
         return True
     except Exception as e:
+        logger.error(f"Ollama连接测试失败: {e}")
         print(f"错误: {e}")
         print("\n请确保:")
         print("1. Ollama 服务已启动 (ollama serve)")
-        print(f"2. 已下载 {config.model} 模型 (ollama pull {config.model})")
+        print(f"2. 已下载 {config.non_thinking_model} 模型 (ollama pull {config.non_thinking_model})")
         return False
 
 
 if __name__ == "__main__":
-    test_ollama_connection()
+    success = test_ollama_connection()
+    if success:
+        print("\n✅ Ollama连接测试成功！")
+        sys.exit(0)
+    else:
+        print("\n❌ Ollama连接测试失败！")
+        sys.exit(1)
